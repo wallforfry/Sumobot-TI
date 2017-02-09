@@ -80,21 +80,21 @@ void loop(void)
         if(whiteLine() == 1)
         {
           digitalWrite(LED_1,HIGH); 
-    digitalWrite(LED_2,LOW);
+          digitalWrite(LED_2,LOW);
           escape();
         }
         else
         {
-          if(sharpDistance(164))             // ~32cm
+          if(ultrasonDistance(32))             // ~32cm
           {
             go(255, 255);
             digitalWrite(LED_1,HIGH); 
-      digitalWrite(LED_2,HIGH);
+            digitalWrite(LED_2,HIGH);
           }
           else
           {
             digitalWrite(LED_1,LOW); 
-      digitalWrite(LED_2,HIGH);
+            digitalWrite(LED_2,HIGH);
             go(50,192);
             delay(100); 
           }
@@ -127,11 +127,11 @@ void start(void)
 
 
 /********************************************************************************
-SHARP DISTANCE
+ULTRASON DISTANCE
 *********************************************************************************
 Cette fonction compare la valeur (entre 0V et 5V) mesuré (entre 0 et 1023) fournis 
-sur l'entré analogique A0 par le SHARP, et l'entier passé en paramétre.
-La fonction retourne 1 si la valeur mesurée est inférieure à celle passée en 
+sur l'entré analogique 18 par le capteur ultrason, et l'entier passé en paramètre.
+La fonction retourne 0 si la valeur mesurée est supérieure à celle passée en 
 paramètre, sinon elle retourne 0.
 Un 0 en numérique corespond à 0V en analogique, un 1023 en numérique corespond à 
 5V en analogique.
@@ -139,10 +139,15 @@ Voir ADC dans le cour.
 http://arduino.cc/en/Reference/analogRead
 *********************************************************************************
 ********************************************************************************/
-int sharpDistance(int distance)
+int ultrasonDistance(int distance)
 {
-/*  int mesure = analogRead(SHARP);
-  if(mesure < distance)
+  digitalWrite(TRIGGER, HIGH); 
+  delayMicroseconds(10); 
+  digitalWrite(TRIGGER, LOW); 
+  long lecture_echo = pulseIn(ECHO, HIGH); 
+  long cm = lecture_echo / 58; 
+  
+  if(cm > distance)
   {
     return 0;
   }
@@ -150,8 +155,7 @@ int sharpDistance(int distance)
   {
     Serial.println("Adversaire détecté !");
     return 1;
-  }*/
-  return 0;
+  }
 }
 
 
